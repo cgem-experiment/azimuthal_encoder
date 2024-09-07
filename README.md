@@ -23,8 +23,8 @@ Python script saves a .csv file with the filename given in the script in the dir
 - ES = Encoder sample/data
 - CT = Clock tick at time of querying corresponding to each encoder sample
 - PN = Packet number (increments by 1 and rolls over at 2^16-1)
-- T1 = Real time (accurate to 1/10th of a second) when data has been received from UDP socket and processed (added by computer)
-- T2 = Number of microseconds elapsed since start of python script and when data is received from UDP socket and processed (added by computer)
+- T1 = Real time (accurate to 1/10th of a second) when data has been received from UDP socket (added by computer)
+- T2 = Number of microseconds elapsed since start of python script and when data is received from UDP socket (added by computer)
 
 ## System diagram
 ![Azimuthal Encoder-6](https://github.com/user-attachments/assets/28ff7027-73ce-4680-9452-8b50fd2c9dd6)
@@ -42,7 +42,7 @@ Python script saves a .csv file with the filename given in the script in the dir
 7. Connect encoder connector (J3) to box connector (P3).
 8. Connect optic fibre cable coming from box to top of rotary stack (not sure how). Connect optic fibre cable from bottom of rotary stack to switch in hut.
 9. Plug in 12V linear power supply first (this ensures that the encoder is 'on' before the microcontroller starts sending it a clock signal). Then plug in 5V linear power supply.
-10. Run 'UDP_Socket_Sep7.py' script on terminal/command prompt of Hut PC. If nothing prints, try using Wireshark. There may be a problem with the IP configuration of either the Hut PC or the switch.
+10. Run 'UDPsocket_Sep7_Windows.py' script on terminal/command prompt of Hut PC (the script should work on other operating systems, it was just tested on Windows computer, hence the filename). If nothing prints, try using Wireshark. There may be a problem with the IP configuration of either the Hut PC or the switch.
 
 Image 1: 
 ![IMG_0527_4](https://github.com/user-attachments/assets/2cd98414-8261-4783-ab78-b3eca20e6723)
