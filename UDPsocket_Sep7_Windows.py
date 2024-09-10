@@ -53,12 +53,17 @@ def process_payload(payload):
     times_int = []
 	
     for i, sample_hex in enumerate(samples_hex):
+        if len(sample_hex) < 16:
+            if i != 100:
+                print(f"Warning: Skipping invalid sample at index {i}: {sample_hex} with surrounding {samples_hex[i-5:i+5]} and payload {payload_hex[i*16+i*4-50:i+i*16*4+50]}")
+            continue
         try:
-            sample_int = int(sample_hex[2:4] + sample_hex[0:2] + sample_hex[5:6], 16)
-            time_int = int(sample_hex[14:16] + sample_hex[12:14] + sample_hex[10:12] + sample_hex[8:10], 16)
+            # See Github for explanation of how data is sent from the microcontroller and why the hex values are indexed as such
+            # It has to do with the LSB being sent before the MSB for each 16-bit value.
+            sample_int = int(sample_hex[2:4] + sample_hex[0:2] + sample_hex[5:6], 16) # 20-bit sample value
+            time_int = int(sample_hex[14:16] + sample_hex[12:14] + sample_hex[10:12] + sample_hex[8:10], 16) # 32-bit clock tick
             samples_int.append(sample_int)
             times_int.append(time_int)
-            
         except ValueError as e:
             print(f"Error processing sample: {sample_hex} - {e}")
 	
