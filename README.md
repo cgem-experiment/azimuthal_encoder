@@ -1,4 +1,4 @@
-![IMG_0556](https://github.com/user-attachments/assets/66175086-daee-4dc6-a186-0cad843d99b7)# azimuthalencoder
+# azimuthalencoder
 H7 code for azimuthal encoder sampling at 1kHz. Currently no PPS alignment.
 
 #### Latest update: Friday Sept. 7, 2024
@@ -58,22 +58,21 @@ Python script saves a .csv file with the filename given in the script in the dir
 9. Plug in 12V linear power supply first (this ensures that the encoder is 'on' before the microcontroller starts sending it a clock signal). Then plug in 5V linear power supply.
 10. Run 'UDPsocket_Sep7_Windows.py' script on terminal/command prompt of Hut PC (the script should work on other operating systems, it was just tested on Windows computer, hence the filename). If nothing prints, try using Wireshark. There may be a problem with the IP configuration of either the Hut PC or the switch.
 
-Images of in-lab setup for reference: 
+## Images of in-lab setup for reference: 
 
-<!-- Box + Box connectors -->
-<img src="https://github.com/user-attachments/assets/c73e15fb-40f8-43af-b734-89d76a1dabaa/IMG_0556" alt="Box + Box connectors" width="500">
+### Box + Box connectors
+<img src="https://github.com/user-attachments/assets/c73e15fb-40f8-43af-b734-89d76a1dabaa" alt="Box + Box connectors" width="500">
 
-<!-- Wiring of linear power supplies. Note GND of 5V and 12V supply are connected -->
-<img src="https://github.com/user-attachments/assets/170b3e34-96c0-4051-a3e7-4964b8f0b550/IMG_0558" alt="Wiring of linear power supplies" width="500">
-<img src="https://github.com/user-attachments/assets/2cd98414-8261-4783-ab78-b3eca20e6723/IMG_0527_4" alt="Wiring of linear power supplies 2" width="500">
+### Wiring of linear power supplies
+<img src="https://github.com/user-attachments/assets/170b3e34-96c0-4051-a3e7-4964b8f0b550" alt="Wiring of linear power supplies" width="500">
 
-<!-- Overview of entire setup -->
-<img src="https://github.com/user-attachments/assets/2c43cc3a-37a7-45d6-977c-255a2167d7b3/IMG_0557" alt="Overview of entire setup" width="500">
+### Overview of entire setup
+<img src="https://github.com/user-attachments/assets/2c43cc3a-37a7-45d6-977c-255a2167d7b3" alt="Overview of entire setup" width="500">
 
-<!-- Optic fibre from box connection to rotary stack -->
-<img src="https://github.com/user-attachments/assets/d3152fd6-6c91-4fd4-8aa4-bc87491894fb/IMG_0550" alt="Optic fibre from box connection to rotary stack" width="500">
+### Optic fibre from box connection to rotary stack
+<img src="https://github.com/user-attachments/assets/d3152fd6-6c91-4fd4-8aa4-bc87491894fb" alt="Optic fibre from box connection to rotary stack" width="500">
 
-<!-- Optic fibre connection to switch (note L/R placement of ETH1/2) -->
-<img src="https://github.com/user-attachments/assets/61a38210-8e6f-4bf8-ba59-17434e307e5c/IMG_0546" alt="Optic fibre
+### Optic fibre connection to switch (note L/R placement of ETH1/2)
+<img src="https://github.com/user-attachments/assets/61a38210-8e6f-4bf8-ba59-17434e307e5c" alt="Optic fibre connection to switch" width="500">
 
 
