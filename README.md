@@ -57,7 +57,7 @@ Python script saves a .csv file with the filename given in the script in the dir
 8. Connect optic fibre cable coming from box to top of rotary stack optic fibre (J8). Connect optic fibre cable from bottom of rotary stack to switch in hut.
 9. Plug in 12V linear power supply first (this ensures that the encoder is 'on' before the microcontroller starts sending it a clock signal). Then plug in 5V linear power supply.
 10. Run 'UDPsocket_Sep7_Windows.py' script on terminal/command prompt of Hut PC (the script should work on other operating systems, it was just tested on Windows computer, hence the filename). If nothing prints, try using Wireshark. There may be a problem with the IP configuration of either the Hut PC or the switch.
-11. Use 'azimuthal encoder data analysis functions.ipynb' to help with analyzing data
+11. Use 'data_analysis_functions.ipynb' to help with analyzing data
 
 ## Images of in-lab setup for reference: 
 
