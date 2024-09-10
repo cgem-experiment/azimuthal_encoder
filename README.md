@@ -17,14 +17,22 @@ H7 code for azimuthal encoder sampling at 1kHz. Currently no PPS alignment.
 - Computer subnet mask length (on lab PC): 16
 - Computer gateway (on lab PC): 10.20.1.1
 
-## Data output:
+## Data output from microcontroller (not relevant for data analysis, see csv section below for that):
+The microcontroller sends a 602-byte package every 10ms. The data is structured as follows. All are 16-bit values:
+
+MSB 16-bits of data, LSB 4-bits of data, LSB 16-bits of clock tick, MSB 16-bits of clock tick, 16-bit spacer pt.1 (0xAB89), 16-bit spacer pt. 2 (0xEFCD)
+
+Note that since these 16-bit values are packaged into 8-bit bytes, with the LSB first, in practice the spacer becomes 0x89ABEFCD, which is used in the python script to parse individual samples from each packet. This is also the reason the indexing in the python script for storing the data and clock tick values might seem slightly strange at first look.
+<img width="1049" alt="Screenshot 2024-09-09 at 10 07 25 PM" src="https://github.com/user-attachments/assets/2527d637-e849-4490-8920-522668cc8a44">
+
+## Csv file format:
 Python script saves a .csv file with the filename given in the script in the directory in which it is run from.
 ### | ES1 | ... | ES100 | CT1 | ... | CT100 | PN | T1 | T2 |
 - ES = Encoder sample/data
 - CT = Clock tick at time of querying corresponding to each encoder sample
 - PN = Packet number (increments by 1 and rolls over at 2^16-1)
 - T1 = Real time (accurate to 1/10th of a second) when data has been received from UDP socket (added by computer)
-- T2 = Number of microseconds elapsed since start of python script and when data is received from UDP socket (added by computer)
+- T2 = Number of nanoseconds elapsed since start of the unix epoch (Jan 1, 1970) modulo 1,000,000 (i.e. the number of nanoseconds into the current second) when data is received from UDP socket (added by computer)
 
 ## System diagram
 ![Azimuthal Encoder-6](https://github.com/user-attachments/assets/28ff7027-73ce-4680-9452-8b50fd2c9dd6)
