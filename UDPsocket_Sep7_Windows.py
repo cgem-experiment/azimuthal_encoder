@@ -3,40 +3,36 @@ import csv
 from datetime import datetime  
 import time
 
-NUM_PACKETS_PER_FILE = 26400
+#CONFIG HEADER
+NUM_PACKETS_PER_FILE = 26400 # Number of packets to write to each file
+NUM_FILES = -1  # Set to -1 for infinite, or specify the number of files
 
-filenames = [
-	'file1.csv',
-    'file2.csv',
-    'file3.csv',
-    'file4.csv'
-]
-
-filename = filenames[0]
-filename_idx = 0
-packet_idx = 0
-
-# Configuration of IP addresses
 UDP_IP = "10.20.3.2" # Micrcontroller IP
 UDP_PORT = 8 # Microcontroller port
 LISTEN_IP = "10.20.1.3" # Hut PC IP
 LISTEN_PORT = 55151 # Hut PC port
 PACKET_SIZE = 601*2 + 42  # 600 bytes of data + 42 bytes UDP header
 
+# GENERATE FILENAME FUNCTION
+def generate_filename():
+    timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
+    return f"{timestamp}_cgem_az_encoder.csv"
+
+# Initial filename, file and packet index
+filename = generate_filename()
+packet_idx = 0
+file_idx = 0
+
+# Configure ethernet socket
 protocol = socket.SOCK_DGRAM  # SOCK_DGRAM is for UDP
 ip_family = socket.AF_INET  # AF_INET is for ipv4
-
-# Create UDP socket
 sock = socket.socket(ip_family, protocol)
 
 # Bind to the specific IP and port
 sock.bind((LISTEN_IP, LISTEN_PORT)) # Can try using sock.bind(("0.0.0.0", LISTEN_PORT)) instead if having problems
 
+# Print confirmation
 print(f"Listening for UDP packets from {UDP_IP}:{UDP_PORT} on port {LISTEN_PORT}...")
-
-
-
-
 
 # PROCESS FUNCTION
 def process_payload(payload):
@@ -55,7 +51,7 @@ def process_payload(payload):
     for i, sample_hex in enumerate(samples_hex):
         if len(sample_hex) < 16:
             if i != 100:
-                print(f"Warning: Skipping invalid sample at index {i}: {sample_hex} with surrounding {samples_hex[i-5:i+5]} and payload {payload_hex[i*16+i*4-50:i+i*16*4+50]}")
+                 print(f"Warning: Skipping invalid sample at index {i}: {sample_hex} with surrounding {samples_hex[i-5:i+5]} and payload {payload_hex[i*16+i*4-50:i+i*16*4+50]}")
             continue
         try:
             # See Github for explanation of how data is sent from the microcontroller and why the hex values are indexed as such
@@ -78,29 +74,27 @@ def process_payload(payload):
         writer = csv.writer(file)
         writer.writerow(samples_int)
     
-    print(len(samples_int), "samples written to file. First value:", samples_int[0])
-
-
-
-
+    #disabled
+    #print(len(samples_int), "samples written to file. First value:", samples_int[0])
 
 # MAIN LOOP
 try:
     while True:
-        data, addr = sock.recvfrom(PACKET_SIZE)  # Receive packet 
+        data, addr = sock.recvfrom(PACKET_SIZE)  # Receive packet
         if addr[0] == UDP_IP and addr[1] == UDP_PORT:
             data_payload = data[0:]  # UDP header is removed
-            process_payload(data_payload) # Process the payload (function above)
+            process_payload(data_payload)  # Process the payload (function above)
             packet_idx += 1
             if packet_idx == NUM_PACKETS_PER_FILE:
-                print("All packets processed. Next file initialized.")
+                print("All packets processed for current file. Next file initialized.")
                 packet_idx = 0
-                filename_idx += 1
-                if filename_idx == len(filenames):
-                    print("All files processed. Exiting...")
+                file_idx += 1
+                if NUM_FILES != -1 and file_idx >= NUM_FILES:
+                    print("All specified files processed. Exiting...")
                     break
                 else:
-                    filename = filenames[filename_idx]
+                    filename = generate_filename()
+                    print(f"Writing to new file: {filename}")
         else:
             print(f"Ignored packet from {addr}")  # Ignore packets from other addresses/ports
 except KeyboardInterrupt:
