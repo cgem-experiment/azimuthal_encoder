@@ -18,7 +18,7 @@ PACKET_SIZE = 601*2 + 42  # 600 bytes of data + 42 bytes UDP header
 # Take timestamp and define function for filenames
 timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
 def generate_filename(file_idx):
-    return f"{timestamp}_File{file_idx:03d}_cgem_az_encoder.csv"
+    return f"{timestamp}_File{file_idx:04d}_cgem_az_encoder.csv"
 
 # Create the folder
 folder_name = f"{timestamp}_cgem_az_encoder"
