@@ -2,10 +2,12 @@ import socket
 import csv  
 from datetime import datetime  
 import time
+import os
 
 #CONFIG HEADER
 NUM_PACKETS_PER_FILE = 26400 # Number of packets to write to each file
 NUM_FILES = -1  # Set to -1 for infinite, or specify the number of files
+BASE_PATH = "/data"  # Change this variable to set the base directory
 
 UDP_IP = "10.20.3.2" # Micrcontroller IP
 UDP_PORT = 8 # Microcontroller port
@@ -13,15 +15,20 @@ LISTEN_IP = "10.20.1.3" # Hut PC IP
 LISTEN_PORT = 55151 # Hut PC port
 PACKET_SIZE = 601*2 + 42  # 600 bytes of data + 42 bytes UDP header
 
-# GENERATE FILENAME FUNCTION
-def generate_filename():
-    timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
-    return f"{timestamp}_cgem_az_encoder.csv"
+# Take timestamp and define function for filenames
+timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
+def generate_filename(file_idx):
+    return f"{timestamp}_File{file_idx:03d}_cgem_az_encoder.csv"
+
+# Create the folder
+folder_name = f"{timestamp}_cgem_az_encoder"
+full_path = os.path.join(BASE_PATH, folder_name)
+os.makedirs(full_path, exist_ok=True)  # Create folder if it doesn't exist
 
 # Initial filename, file and packet index
-filename = generate_filename()
 packet_idx = 0
-file_idx = 0
+file_idx = 1
+filename = os.path.join(full_path, generate_filename(file_idx))
 
 # Configure ethernet socket
 protocol = socket.SOCK_DGRAM  # SOCK_DGRAM is for UDP
@@ -93,7 +100,7 @@ try:
                     print("All specified files processed. Exiting...")
                     break
                 else:
-                    filename = generate_filename()
+                    filename = os.path.join(full_path, generate_filename(file_idx))
                     print(f"Writing to new file: {filename}")
         else:
             print(f"Ignored packet from {addr}")  # Ignore packets from other addresses/ports
