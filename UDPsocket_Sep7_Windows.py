@@ -40,6 +40,7 @@ sock.bind((LISTEN_IP, LISTEN_PORT)) # Can try using sock.bind(("0.0.0.0", LISTEN
 
 # Print confirmation
 print(f"Listening for UDP packets from {UDP_IP}:{UDP_PORT} on port {LISTEN_PORT}...")
+print("Folder created at ", full_path)
 
 # PROCESS FUNCTION
 def process_payload(payload):
