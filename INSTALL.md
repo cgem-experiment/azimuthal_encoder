@@ -1,3 +1,5 @@
+# Install cgem_az_encoder.py
+
 When first installing cgem_az_encoder.py running as a service run the following commands:
 
 - Create the folder `/az_encoder`
