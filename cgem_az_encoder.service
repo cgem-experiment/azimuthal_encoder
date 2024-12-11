@@ -1,0 +1,15 @@
+[Unit]
+Description=CGEM Azimuth Encoder Data Acquisition Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /az_encoder/cgem_az_encoder.py
+WorkingDirectory=/az_encoder
+Restart=on-failure
+StandardOutput=append:/az_encoder/cg_az_encoder.log
+StandardError=append:/az_encoder/cg_az_encoder.log
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=multi-user.target
