@@ -1,5 +1,5 @@
 {
-    "base_path": "/data",
+    "base_path": "/data/az_encoder/",
     "udp_ip": "10.20.3.2",
     "udp_port": 8,
     "listen_ip": "10.20.1.3",
