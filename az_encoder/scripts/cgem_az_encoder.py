@@ -26,7 +26,7 @@ Main Loop
 3. Handles interruptions (e.g., `KeyboardInterrupt`) gracefully by closing resources.
 
 @Author: Shuyu van Kerkwijk and Pedro Villalba-González
-@Date: January 14th, 2025
+@Date: March 20th, 2025
 @e-mail: pedrovg@phas.ubc.ca
 @status: Deployment
 """
@@ -41,6 +41,7 @@ import json
 import logging
 from logging.handlers import RotatingFileHandler
 from threading import Timer
+import schedule
 
 # Configuration Constants
 DEFAULT_CONFIG_PATH = "/az_encoder/config.json"
@@ -133,7 +134,7 @@ class TimeStampedRotatingFileHandler(RotatingFileHandler):
 
         if os.path.exists(self.base_log_file):
             # Generate timestamped filename
-            timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
+            timestamp = datetime.utcnow().strftime("%Y%m%dT%H%M%S")
             new_log_file = f"{os.path.splitext(self.base_log_file)[0]}_{timestamp}.log"
 
             # Rename the current log file
@@ -188,7 +189,7 @@ def monitor_log_file(logger: logging.Logger, log_file: str) -> None:
     """
     if not os.path.exists(log_file):
         logger.warning(f"cgem_az_encoder.py: Log file {log_file} deleted. Recreating logger...")
-        create_logger(log_file)  
+        create_logger(log_file)
 
     # Schedule the next check
     Timer(LOG_CHECK_INTERVAL, monitor_log_file, [logger, log_file]).start()
@@ -233,13 +234,13 @@ The encoder operation starts below.
 
 logger = get_logger()
 
-# Global variables for file management
-filename = generate_filename()
 # Helper Functions
 def generate_filename():
     """Generate a new filename based on the current timestamp."""
-    timestamp = datetime.now().strftime(TIMESTAMP_FORMAT)
-    return os.path.join(full_path, f"{timestamp}_cgem_az_encoder.csv")
+    timestamp = datetime.utcnow().strftime(TIMESTAMP_FORMAT)
+    return os.path.join(BASE_PATH, f"{timestamp}_cgem_az_encoder.csv")
+
+filename = generate_filename()
 
 def rotate_file():
     """Rotate the current CSV file."""
@@ -249,7 +250,7 @@ def rotate_file():
 
 def zip_previous_day_files():
     """Zip all files from the previous day."""
-    previous_day = (datetime.now() - timedelta(days=1)).strftime(FOLDER_TIMESTAMP_FORMAT)
+    previous_day = (datetime.utcnow() - timedelta(days=1)).strftime(FOLDER_TIMESTAMP_FORMAT)
     previous_folder_name = f"{previous_day}_cgem_az_encoder"
     previous_full_path = os.path.join(BASE_PATH, previous_folder_name)
 
@@ -279,7 +280,7 @@ def process_payload(payload):
     """Process the incoming payload and write to the current file."""
     global filename
 
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
     current_time_ns = time.time_ns() % 1_000_000_000
     payload_hex = payload.hex()
 
