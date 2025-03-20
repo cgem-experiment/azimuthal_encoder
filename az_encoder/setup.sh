@@ -31,10 +31,10 @@ sudo mkdir -p /az_encoder/logs
 
 echo "Reloading systemd and enabling services..."
 sudo systemctl daemon-reload
-sudo systemctl enable cg_az_encoder.service
+sudo systemctl enable cgem_az_encoder.service
 
 echo "Starting services..."
-sudo systemctl start cg_az_encoder.service
+sudo systemctl start cgem_az_encoder.service
 
 echo "Deployment completed successfully!"
-sudo systemctl status cg_az_encoder.service
+sudo systemctl status cgem_az_encoder.service
