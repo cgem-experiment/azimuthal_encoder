@@ -1,7 +1,7 @@
 # azimuthalencoder
 H7 code for azimuthal encoder sampling at 1kHz. Currently no PPS alignment.
 
-#### Latest update: Friday Sept. 7, 2024
+#### Latest update: Tuesday, January 14th 2025
 
 ## System overview:
 - STM H723ZG microcontroller
@@ -56,7 +56,7 @@ Python script saves a .csv file with the filename given in the script in the dir
 7. Connect encoder connector (J3) to box connector (P3).
 8. Connect optic fibre cable coming from box to top of rotary stack optic fibre (J8). Connect optic fibre cable from bottom of rotary stack to switch in hut.
 9. Plug in 12V linear power supply first (this ensures that the encoder is 'on' before the microcontroller starts sending it a clock signal). Then plug in 5V linear power supply.
-10. Run 'UDPsocket_Sep7_Windows.py' script on terminal/command prompt of Hut PC (the script should work on other operating systems, it was just tested on Windows computer, hence the filename). If nothing prints, try using Wireshark. There may be a problem with the IP configuration of either the Hut PC or the switch.
+10. Run `setup.sh` from `az_encoder` folder. This should start a service that reads the encoder, rotating files every 30 minutes and zipping them once a day.
 11. Use 'data_analysis_functions.ipynb' to help with analyzing data
 
 ## Images of in-lab setup for reference: 
