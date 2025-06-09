@@ -248,33 +248,6 @@ def rotate_file():
     filename = generate_filename()
     logger.info(f"Rotated to new file: {filename}")
 
-def zip_previous_day_files():
-    """Zip all files from the previous day."""
-    previous_day = (datetime.utcnow() - timedelta(days=1)).strftime(FOLDER_TIMESTAMP_FORMAT)
-    previous_folder_name = f"{previous_day}_cgem_az_encoder"
-    previous_full_path = os.path.join(BASE_PATH, previous_folder_name)
-
-    if not os.path.exists(previous_full_path):
-        logger.warning(f"No data folder found for the previous day: {previous_full_path}")
-        return
-
-    zip_filename = os.path.join(BASE_PATH, f"{previous_day}_cgem_az_encoder.zip")
-    logger.info(f"Zipping files from {previous_full_path} into {zip_filename}...")
-
-    try:
-        with zipfile.ZipFile(zip_filename, "w") as zipf:
-            for root, _, files in os.walk(previous_full_path):
-                for file in files:
-                    zipf.write(os.path.join(root, file), arcname=file)
-
-        logger.info("Zipping completed. Cleaning up files...")
-        for root, _, files in os.walk(previous_full_path):
-            for file in files:
-                os.remove(os.path.join(root, file))
-
-        os.rmdir(previous_full_path)
-    except Exception as e:
-        logger.error(f"Error during zipping or cleanup: {e}", exc_info=True)
 
 def process_payload(payload):
     """Process the incoming payload and write to the current file."""
@@ -322,8 +295,6 @@ rotate_file()
 
 # Main Loop
 try:
-    zip_previous_day_files()
-
     while True:
         schedule.run_pending()
         data, addr = sock.recvfrom(PACKET_SIZE)
