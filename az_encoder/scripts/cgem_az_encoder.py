@@ -253,8 +253,6 @@ def process_payload(payload):
     """Process the incoming payload and write to the current file."""
     global filename
 
-    current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
-    current_time_ns = time.time_ns() % 1_000_000_000
     payload_hex = payload.hex()
 
     samples_hex = payload_hex.split("89abcdef")
@@ -272,9 +270,9 @@ def process_payload(payload):
         except ValueError as e:
             logger.error(f"Malformed payload segment {sample_hex}: {e}")
 
+    current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")   
     samples_int.extend(times_int)
     samples_int.append(current_time)
-    samples_int.append(current_time_ns)
 
     with open(filename, mode="a", newline="") as file:
         writer = csv.writer(file)
