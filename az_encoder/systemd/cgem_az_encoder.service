@@ -3,11 +3,15 @@ Description=CGEM Azimuth Encoder Data Acquisition Service
 After=network.target
 
 [Service]
+Type=simple
+User=cgem
+Group=cgem_control
+WorkingDirectory=/az_encoder
 ExecStart=/environments/cgem_az_encoder/bin/python /az_encoder/scripts/cgem_az_encoder.py
 Restart=on-failure
-KillSignal=SIGQUIT
-StandardOutput=append:/cgem_az_encoder/logs/cg_az_encoder.log
-StandardError=append:/cgem_az_encoder/logs/cg_az_encoder.log
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
+
