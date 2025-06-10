@@ -259,7 +259,7 @@ def process_payload(payload, current_time):
     ----------
     payload : bytes
         Raw binary data containing interleaved sample and timestamp segments.
-    current_time : int
+    current_time : str
         The current time to be appended to the CSV record.
 
     Globals
