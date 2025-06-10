@@ -281,7 +281,6 @@ def process_payload(payload):
 # Scheduling Tasks
 schedule.every().hour.at(":00").do(rotate_file)
 schedule.every().hour.at(":30").do(rotate_file)
-schedule.every().day.at("00:01").do(zip_previous_day_files)
 
 # Configure UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
