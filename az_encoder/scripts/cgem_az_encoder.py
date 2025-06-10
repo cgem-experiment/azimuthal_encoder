@@ -249,13 +249,13 @@ def rotate_file():
     logger.info(f"Rotated to new file: {filename}")
 
 
-def process_payload(payload):
+def process_payload(payload, current_time):
     """Process the incoming payload and write to the current file."""
     global filename
 
     payload_hex = payload.hex()
-
     samples_hex = payload_hex.split("89abcdef")
+   
     samples_int = []
     times_int = []
 
@@ -270,7 +270,7 @@ def process_payload(payload):
         except ValueError as e:
             logger.error(f"Malformed payload segment {sample_hex}: {e}")
 
-    current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")   
+      
     samples_int.extend(times_int)
     samples_int.append(current_time)
 
@@ -296,8 +296,8 @@ try:
         schedule.run_pending()
         data, addr = sock.recvfrom(PACKET_SIZE)
         if addr[0] == UDP_IP and addr[1] == UDP_PORT:
-            data_payload = data[0:]  # UDP header is removed
-            process_payload(data_payload)
+            current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f") 
+            process_payload(data[0:], current_time)
         else:
             logger.info(f"Ignored packet from {addr}")
 except KeyboardInterrupt:
