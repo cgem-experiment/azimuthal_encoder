@@ -26,7 +26,7 @@ Main Loop
 3. Handles interruptions (e.g., `KeyboardInterrupt`) gracefully by closing resources.
 
 @Author: Shuyu van Kerkwijk and Pedro Villalba-González
-@Date: March 20th, 2025
+@Date: June 10th, 2025
 @e-mail: pedrovg@phas.ubc.ca
 @status: Deployment
 """
@@ -250,7 +250,50 @@ def rotate_file():
 
 
 def process_payload(payload, current_time):
-    """Process the incoming payload and write to the current file."""
+    """ Process binary payload from az encoder.
+    
+    Process an incoming binary payload, extract sample and timestamp values, 
+    and append them—along with the current time—to a CSV file.
+
+    Parameters
+    ----------
+    payload : bytes
+        Raw binary data containing interleaved sample and timestamp segments.
+    current_time : int
+        The current time to be appended to the CSV record.
+
+    Globals
+    -------
+    filename : str
+        Path to the CSV file where processed data will be written.
+    logger : logging.Logger
+        Logger used for reporting malformed segments.
+
+    Returns
+    -------
+    None
+        This function only writes data to the CSV and does not return a value.
+
+    Raises
+    ------
+    ValueError
+        If conversion of a hex segment to integer fails; such segments are logged 
+        and skipped, but the exception is not propagated.
+
+    Notes
+    -----
+    1. Converts the entire payload to a hex string.
+    2. Splits the hex string on the marker `'89abcdef'` to isolate individual segments.
+    3. For each segment:
+       - Skips if shorter than 16 hex characters.
+       - Extracts and reorders bytes to form two integers:
+         - `sample_int` from bytes at positions [2:4], [0:2], [5:6]
+         - `time_int` from bytes at positions [14:16], [12:14], [10:12], [8:10]
+       - Logs and ignores any segment that raises `ValueError`.
+    4. Aggregates all parsed samples and timestamps into a single list.
+    5. Appends the supplied `current_time` to this list.
+    6. Opens `filename` in append mode and writes the list as a new CSV row.
+   """
     global filename
 
     payload_hex = payload.hex()
