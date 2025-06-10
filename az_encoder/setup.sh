@@ -27,7 +27,10 @@ sudo cp scripts/*.py /az_encoder/scripts/
 echo "Copying systemd service files..."
 sudo cp systemd/*.service /etc/systemd/system/
 
+echo "Creating /az_encoder and logs directory, setting owners/permissions…"
 sudo mkdir -p /az_encoder/logs
+sudo chown -R cgem:cgem_control /az_encoder
+sudo chmod -R 775       /az_encoder
 
 echo "Reloading systemd and enabling services..."
 sudo systemctl daemon-reload
