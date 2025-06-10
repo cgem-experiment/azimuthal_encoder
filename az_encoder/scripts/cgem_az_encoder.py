@@ -338,8 +338,8 @@ try:
     while True:
         schedule.run_pending()
         data, addr = sock.recvfrom(PACKET_SIZE)
+        current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f") 
         if addr[0] == UDP_IP and addr[1] == UDP_PORT:
-            current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f") 
             process_payload(data[0:], current_time)
         else:
             logger.info(f"Ignored packet from {addr}")
