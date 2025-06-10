@@ -1,7 +1,7 @@
 # azimuthalencoder
 H7 code for azimuthal encoder sampling at 1kHz. Currently no PPS alignment.
 
-#### Latest update: Tuesday, January 14th 2025
+#### Latest update: Tuesday, June 10th 2025
 
 ## System overview:
 - STM H723ZG microcontroller
@@ -36,9 +36,8 @@ Python script saves a .csv file with the filename given in the script in the dir
 ### | ES1 | ... | ES100 | CT1 | ... | CT100 | PN | T1 | T2 |
 - ES = Encoder sample/data
 - CT = Clock tick at time of querying corresponding to each encoder sample
-- PN = Packet number (increments by 1 and rolls over at 2^16-1)
 - T1 = Real time (accurate to 1/10th of a second) when data has been received from UDP socket (added by computer)
-- T2 = Number of nanoseconds elapsed since start of the unix epoch (Jan 1, 1970) modulo 1,000,000 (i.e. the number of nanoseconds into the current second) when data is received from UDP socket (added by computer)
+
 
 ## System diagram
 ![Azimuthal Encoder-6](https://github.com/user-attachments/assets/28ff7027-73ce-4680-9452-8b50fd2c9dd6)

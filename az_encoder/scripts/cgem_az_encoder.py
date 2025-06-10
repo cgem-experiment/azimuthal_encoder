@@ -26,7 +26,7 @@ Main Loop
 3. Handles interruptions (e.g., `KeyboardInterrupt`) gracefully by closing resources.
 
 @Author: Shuyu van Kerkwijk and Pedro Villalba-González
-@Date: March 20th, 2025
+@Date: June 10th, 2025
 @e-mail: pedrovg@phas.ubc.ca
 @status: Deployment
 """
@@ -248,43 +248,57 @@ def rotate_file():
     filename = generate_filename()
     logger.info(f"Rotated to new file: {filename}")
 
-def zip_previous_day_files():
-    """Zip all files from the previous day."""
-    previous_day = (datetime.utcnow() - timedelta(days=1)).strftime(FOLDER_TIMESTAMP_FORMAT)
-    previous_folder_name = f"{previous_day}_cgem_az_encoder"
-    previous_full_path = os.path.join(BASE_PATH, previous_folder_name)
 
-    if not os.path.exists(previous_full_path):
-        logger.warning(f"No data folder found for the previous day: {previous_full_path}")
-        return
+def process_payload(payload, current_time):
+    """ Process binary payload from az encoder.
+    
+    Process an incoming binary payload, extract sample and timestamp values, 
+    and append them—along with the current time—to a CSV file.
 
-    zip_filename = os.path.join(BASE_PATH, f"{previous_day}_cgem_az_encoder.zip")
-    logger.info(f"Zipping files from {previous_full_path} into {zip_filename}...")
+    Parameters
+    ----------
+    payload : bytes
+        Raw binary data containing interleaved sample and timestamp segments.
+    current_time : str
+        The current time to be appended to the CSV record.
 
-    try:
-        with zipfile.ZipFile(zip_filename, "w") as zipf:
-            for root, _, files in os.walk(previous_full_path):
-                for file in files:
-                    zipf.write(os.path.join(root, file), arcname=file)
+    Globals
+    -------
+    filename : str
+        Path to the CSV file where processed data will be written.
+    logger : logging.Logger
+        Logger used for reporting malformed segments.
 
-        logger.info("Zipping completed. Cleaning up files...")
-        for root, _, files in os.walk(previous_full_path):
-            for file in files:
-                os.remove(os.path.join(root, file))
+    Returns
+    -------
+    None
+        This function only writes data to the CSV and does not return a value.
 
-        os.rmdir(previous_full_path)
-    except Exception as e:
-        logger.error(f"Error during zipping or cleanup: {e}", exc_info=True)
+    Raises
+    ------
+    ValueError
+        If conversion of a hex segment to integer fails; such segments are logged 
+        and skipped, but the exception is not propagated.
 
-def process_payload(payload):
-    """Process the incoming payload and write to the current file."""
+    Notes
+    -----
+    1. Converts the entire payload to a hex string.
+    2. Splits the hex string on the marker `'89abcdef'` to isolate individual segments.
+    3. For each segment:
+       - Skips if shorter than 16 hex characters.
+       - Extracts and reorders bytes to form two integers:
+         - `sample_int` from bytes at positions [2:4], [0:2], [5:6]
+         - `time_int` from bytes at positions [14:16], [12:14], [10:12], [8:10]
+       - Logs and ignores any segment that raises `ValueError`.
+    4. Aggregates all parsed samples and timestamps into a single list.
+    5. Appends the supplied `current_time` to this list.
+    6. Opens `filename` in append mode and writes the list as a new CSV row.
+   """
     global filename
 
-    current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")
-    current_time_ns = time.time_ns() % 1_000_000_000
     payload_hex = payload.hex()
-
     samples_hex = payload_hex.split("89abcdef")
+   
     samples_int = []
     times_int = []
 
@@ -299,9 +313,9 @@ def process_payload(payload):
         except ValueError as e:
             logger.error(f"Malformed payload segment {sample_hex}: {e}")
 
+      
     samples_int.extend(times_int)
     samples_int.append(current_time)
-    samples_int.append(current_time_ns)
 
     with open(filename, mode="a", newline="") as file:
         writer = csv.writer(file)
@@ -310,7 +324,6 @@ def process_payload(payload):
 # Scheduling Tasks
 schedule.every().hour.at(":00").do(rotate_file)
 schedule.every().hour.at(":30").do(rotate_file)
-schedule.every().day.at("00:01").do(zip_previous_day_files)
 
 # Configure UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -322,14 +335,12 @@ rotate_file()
 
 # Main Loop
 try:
-    zip_previous_day_files()
-
     while True:
         schedule.run_pending()
         data, addr = sock.recvfrom(PACKET_SIZE)
+        current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f") 
         if addr[0] == UDP_IP and addr[1] == UDP_PORT:
-            data_payload = data[0:]  # UDP header is removed
-            process_payload(data_payload)
+            process_payload(data[0:], current_time)
         else:
             logger.info(f"Ignored packet from {addr}")
 except KeyboardInterrupt:
