@@ -1,0 +1,16 @@
+../Core/Src/main.c:117:5:main	5
+../Core/Src/main.c:219:6:SystemClock_Config	4
+../Core/Src/main.c:278:13:MX_SPI4_Init	2
+../Core/Src/main.c:326:13:MX_TIM1_Init	7
+../Core/Src/main.c:405:13:MX_TIM2_Init	6
+../Core/Src/main.c:463:13:MX_TIM23_Init	4
+../Core/Src/main.c:506:13:MX_DMA_Init	1
+../Core/Src/main.c:527:13:MX_GPIO_Init	1
+../Core/Src/main.c:557:6:HAL_SPI_TxRxCpltCallback	4
+../Core/Src/main.c:574:24:extract_value	1
+../Core/Src/main.c:595:24:extract_value2	1
+../Core/Src/main.c:605:13:startParseTask	4
+../Core/Src/main.c:640:13:startEthernetTask	3
+../Core/Src/main.c:687:6:MPU_Config	1
+../Core/Src/main.c:744:6:HAL_TIM_PeriodElapsedCallback	3
+../Core/Src/main.c:766:6:Error_Handler	1

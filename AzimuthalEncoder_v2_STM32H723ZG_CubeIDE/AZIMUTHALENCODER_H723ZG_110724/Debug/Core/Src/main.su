@@ -1,0 +1,16 @@
+../Core/Src/main.c:117:5:main	88	static,ignoring_inline_asm
+../Core/Src/main.c:219:6:SystemClock_Config	120	static
+../Core/Src/main.c:278:13:MX_SPI4_Init	8	static
+../Core/Src/main.c:326:13:MX_TIM1_Init	120	static
+../Core/Src/main.c:405:13:MX_TIM2_Init	64	static
+../Core/Src/main.c:463:13:MX_TIM23_Init	40	static
+../Core/Src/main.c:506:13:MX_DMA_Init	16	static
+../Core/Src/main.c:527:13:MX_GPIO_Init	56	static
+../Core/Src/main.c:557:6:HAL_SPI_TxRxCpltCallback	24	static,ignoring_inline_asm
+../Core/Src/main.c:574:24:extract_value	24	static
+../Core/Src/main.c:595:24:extract_value2	24	static
+../Core/Src/main.c:605:13:startParseTask	48	static
+../Core/Src/main.c:640:13:startEthernetTask	40	static
+../Core/Src/main.c:687:6:MPU_Config	24	static
+../Core/Src/main.c:744:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/main.c:766:6:Error_Handler	4	static,ignoring_inline_asm
