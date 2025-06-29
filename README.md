@@ -75,4 +75,7 @@ Python script saves a .csv file with the filename given in the script in the dir
 ### Optic fibre connection to switch (note L/R placement of ETH1/2)
 <img src="https://github.com/user-attachments/assets/61a38210-8e6f-4bf8-ba59-17434e307e5c" alt="Optic fibre connection to switch" width="500">
 
+# Firmware note:
+If using v2, please note that editing in the STM32CubeIDE .ioc file may generate new task threads that are duplicates of those in USER_CODE_4.
+
 
