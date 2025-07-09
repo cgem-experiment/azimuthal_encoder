@@ -1,5 +1,5 @@
 # azimuthalencoder
-H7 code for azimuthal encoder sampling at 1kHz. Currently no PPS alignment.
+H7 code for azimuthal encoder sampling at 1kHz. Currently no PPS alignment. Note that v1 is the firmware currently flashed on the microcontroller in the on-site system. v2 is untested, but contains several potential improvements and catches more bugs.  
 
 #### Latest update: Tuesday, June 10th 2025
 
